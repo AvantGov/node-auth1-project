@@ -1,6 +1,6 @@
 module.exports = {
     development: {
-        client: 'squlite3',
+        client: 'sqlite3',
         useNullAsDefaul: 'true',
         connection: {
             filename: './data/users.db3'
