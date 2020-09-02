@@ -1,12 +1,12 @@
 const express = require("express")
 const secure = require("bcryptjs")
 const users_access = require("./application_model")
-const { router } = require("../server")
-// const userMiddleware = require("../middleware/validateUserSession")
+const userMiddleware = require("../middleware/validateUserSession")
 
+const router = express.Router()
 
-// * router endpoint for login 
-router.get("/users", async (req, res, next) => {
+// * router endpoint for returning list of users
+router.get("/users/accounts", userMiddleware.restrict(), async (req, res, next) => {
     // ! add user middleware to the function to 
     // ! validate user access 
 
@@ -20,7 +20,7 @@ router.get("/users", async (req, res, next) => {
 
 
 // * router endpoint for sign up 
-router.post("/users/:id", async (req, res, next) => {
+router.post("/users", async (req, res, next) => {
     try {
         const { username, password } = req.body
         const user = await users_access.findBy({ username }).first()
@@ -43,7 +43,7 @@ router.post("/users/:id", async (req, res, next) => {
 });
  
 
-// * router endpoint for logout 
+// * router endpoint for login functioanlity
 router.post("/login", async (req, res, next) => {
     try {
         const { username, password } = req.body
@@ -73,11 +73,11 @@ router.post("/login", async (req, res, next) => {
 });
 
 
-// * router end point for logout 
-router.post("/logout", async (req, res, next) => {
+// * router end point for logout functionality
+router.post("/logout", userMiddleware.restrict(), async (req, res, next) => {
     try {
         // * removes the session record within the database 
-        // * handles possible errors during destroy with next(error)
+        // * handles possible errors during destroy with next(error) router endpoint for verirified check in pages
         req.session.destroy((error) => {
             if (error) {
                 next(error)
